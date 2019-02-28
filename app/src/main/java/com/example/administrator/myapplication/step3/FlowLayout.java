@@ -20,6 +20,7 @@ public class FlowLayout extends ViewGroup {
 
     private static final int mDefaultWidth = 500;//默认宽
     private static final int mDefaultHeight = 300;//默认高
+    private static final int mLineHeigth = 30;//默认行间距
 
     private List<View> views;//全部子view列表
     private HashMap<Integer,LineInfo> mLineMap;//保存每行的信息列表
@@ -50,23 +51,26 @@ public class FlowLayout extends ViewGroup {
         mLineMap.put(lineNum,new LineInfo());
     }
 
+    private void resetViewList(){
+        lineNum = 1;
+        mLineMap = new HashMap<>();
+        mLineMap.put(lineNum,new LineInfo());
+    }
     public void  addContainerView(View view){
         if (views != null){
             views.add(view);
         }
-        lineNum = 1;
+        resetViewList();
         this.addView(view);
         requestLayout();
     }
 
+    //bug后期修复
     public void removeView(){
-//        if (views != null && views.contains(view)){
-//            views.remove(view);
-//        }
         if (views != null && views.size() > 0){
             views.remove(views.size()-1);
         }
-        invalidate();
+        resetViewList();
         requestLayout();
     }
 
@@ -82,7 +86,7 @@ public class FlowLayout extends ViewGroup {
         int widMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 
-        int width = 0;//父view的可用宽度 除去padding
+        int width = 0;//测量宽
         int heitht = 0;//测量高
         int lineWidth = 0;//每行的宽度
         int lineHeight = 0;//行高
@@ -103,11 +107,11 @@ public class FlowLayout extends ViewGroup {
                 lineNum++;
                 mLineMap.put(lineNum,new LineInfo());
                 //换行
-                mWidth = Math.max(width,lineWidth);//取2个最大值
+                width = Math.max(width,lineWidth);//取2个最大值
                 //重置行宽
                 lineWidth = childWidth;
                 //父view的高度 = 各行高度总和
-                heitht += lineHeight;
+                heitht += lineHeight+mLineHeigth;
                 //换行：当前行高 = 当前行的第一个View高
                 lineHeight = childHeight;
             }else {
@@ -118,7 +122,7 @@ public class FlowLayout extends ViewGroup {
             // 最后一个控件
             if (i == chileViewSize - 1)
             {
-                mWidth = Math.max(lineWidth, width);
+                mWidth = Math.max(width,lineWidth)+getPaddingLeft()+getPaddingRight();
                 heitht += lineHeight;
             }
             LineInfo info = mLineMap.get(lineNum);
@@ -133,7 +137,8 @@ public class FlowLayout extends ViewGroup {
             info.setmLineHeigth(lineHeight);
             info.setmLinewidth(lineWidth);
         }
-        mHeight = heitht;
+
+        mHeight = heitht+getPaddingBottom()+getPaddingTop();
         //根据模式来判断是否采用自己计算的值
         setMeasuredDimension(
                 widMode == MeasureSpec.AT_MOST? mWidth:widSize,
@@ -167,9 +172,9 @@ public class FlowLayout extends ViewGroup {
                             l+child.getMeasuredWidth(),
                             t+child.getMeasuredHeight());
 
-                l += child.getMeasuredWidth();
+                l += child.getMeasuredWidth()+layoutParams.rightMargin;
             }
-            t += value.getmLineHeigth();
+            t += value.getmLineHeigth()+getPaddingTop();
         }
 
     }
@@ -189,4 +194,7 @@ public class FlowLayout extends ViewGroup {
     protected LayoutParams generateLayoutParams(LayoutParams p) {
         return new MarginLayoutParams(p);
     }
+
+
+
 }

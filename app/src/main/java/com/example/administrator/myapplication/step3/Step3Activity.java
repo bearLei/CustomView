@@ -26,7 +26,9 @@ public class Step3Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                View view = LayoutInflater.from(Step3Activity.this).inflate(R.layout.flowlayout_item,flowLayout,false);
-               TextView textView =  view.findViewById(R.id.item);
+                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+                layoutParams.rightMargin = 10;
+                TextView textView =  view.findViewById(R.id.item);
                textView.setText("测试数据"+(int)(Math.random()*10));
                view.setBackground(getResources().getDrawable(R.drawable.flow_layout_default_bg));
                 flowLayout.addContainerView(view);
