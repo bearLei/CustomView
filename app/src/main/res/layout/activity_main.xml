@@ -20,4 +20,17 @@
         android:layout_height="wrap_content"
         android:text="跳转到StepOne页面"
         />
+    <Button
+        android:id="@+id/jump_steptwo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="跳转到StepTwo页面"
+        />
+
+    <Button
+        android:id="@+id/jump_stepthree"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="跳转到StepThree页面"
+        />
 </LinearLayout>

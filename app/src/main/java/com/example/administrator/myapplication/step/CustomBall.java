@@ -60,10 +60,16 @@ public class CustomBall extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
 
-        mCurrentX = event.getX();
-        mCurrentY = event.getY();
-        invalidate();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                mCurrentX = event.getX();
+                mCurrentY = event.getY();
+                invalidate();
+                break;
+        }
         return true;
     }
 }
